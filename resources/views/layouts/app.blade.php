@@ -17,9 +17,23 @@
         @include('commons.navbar')
         
         <div class="container">
+            <div class="row">
+                
+                <div class="col-xs-12">
+                <div class="col-sm-offset-2 col-sm-8">
+                <div class="col-md-offset-2 col-md-8">
+                <div class="col-lg-offset-3 col-lg-6">
+                    
             @include('commons.error_messages')
             
             @yield('content')
+            
+                </div>
+                </div>
+                </div>
+                </div>
+                
+            </div>
         </div>
     </body>
 </html>
