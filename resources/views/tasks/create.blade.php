@@ -15,11 +15,11 @@
     </div>
     
     <div class="form-group">
-        {!! Form::label('content', 'メッセージ:') !!}
+        {!! Form::label('content', 'タスク:') !!}
         {!! Form::text('content', null, ['class' => 'form-control']) !!}
     </div>
 
-        {!! Form::submit('投稿') !!}
+        {!! Form::submit('投稿', ['class' => 'btn btn-primary btn-block']) !!}
 
     {!! Form::close() !!}
         </div>

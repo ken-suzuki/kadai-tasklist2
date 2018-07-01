@@ -33,9 +33,13 @@ class TasksController extends Controller
     public function create()
     {
         $task = new Task;
+        
+        /* ログインユーザー */
+        $user = \Auth::user();
 
         return view('tasks.create', [
             'task' => $task,
+            'user' => $user,
         ]);
     }
 
@@ -52,11 +56,18 @@ class TasksController extends Controller
             'content' => 'required|max:255',
         ]);
         
+        /*
         $task = new Task;
         $task->status = $request->status; 
         $task->content = $request->content;
         $task->save();
-
+        */
+        
+        $request->user()->tasks()->create([
+            'content' => $request->content,
+            'status' => $request->status,
+        ]);
+        
         return redirect('/');
     }
 
@@ -68,13 +79,28 @@ class TasksController extends Controller
      */
     public function show($id)
     {
+       
+        /* タスクのIDを取得 */
         $task = Task::find($id);
-
+        
+        /* ログインユーザーを取得 */
+        $user = \Auth::user();
+        
+        /* ログインユーザーがそのタスクのIDを所有しているかのチェック */
+        if (\Auth::user()->id === $task->user_id) {
+        
+        /* タスク詳細ページを表示 */
         return view('tasks.show', [
             'task' => $task,
+            'user' => $user,
         ]);
+        }
+        /* TOPページにリダイレクト */
+        else {
+            return redirect('/');
+        }
     }
-
+    
     /**
      * Show the form for editing the specified resource.
      *
@@ -84,10 +110,19 @@ class TasksController extends Controller
     public function edit($id)
     {
         $task = Task::find($id);
+        
+        /* ログインユーザー */
+        $user = \Auth::user();
 
+        if (\Auth::user()->id === $task->user_id) {
         return view('tasks.edit', [
             'task' => $task,
+            'user' => $user,
         ]);
+        }
+        else {
+            return redirect('/');
+        }
     }
 
     /**
@@ -120,8 +155,17 @@ class TasksController extends Controller
      */
     public function destroy($id)
     {
+        /*
         $task = Task::find($id);
         $task->delete();
+        return redirect('/');
+        */
+        
+        $task = Task::find($id);
+
+        if (\Auth::user()->id === $task->user_id) {
+            $task->delete();
+        }
 
         return redirect('/');
     }
